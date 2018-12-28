@@ -22,8 +22,8 @@ class Creature {
     }
 	printCreature(){
 		return ['species', 'gender', 'name', 'legs', 'hands', 'saying']
-				  .map(key => this[key])
-				  .concat(this.friends.map(friend => friend['name']))
+				  .map(key => `<strong>${this[key]}</strong>`)
+				  .concat(this.friends.map(friend => `<em>${friend['name']}</em>`))
 				  .join('; ');
 	}
 }
