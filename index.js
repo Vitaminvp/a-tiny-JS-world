@@ -7,64 +7,49 @@
 
 // ======== OBJECTS DEFINITIONS ========
 // Define your objects here
-
-const man = {
-    species: 'human',
-    gender: 'male',
-    name: 'John',
-    legs: 2,
-    hands: 2,
-    saying: 'boys will be boys.',
-    friends: []
-};
-const woman = {
-    species: 'human',
-    gender: 'female',
-    name: 'Sarah',
-    legs: 2,
-    hands: 2,
-    saying: 'Love saves the world.',
-    friends: []
-};
-const dog = {
-    species: 'dog',
-    gender: 'male',
-    name: 'Toby',
-    legs: 4,
-    hands: 0,
-    saying: 'woof-woof!',
-    friends: []
-};
-const cat = {
-    species: 'cat',
-    gender: 'female',
-    name: 'Maya',
-    legs: 4,
-    hands: 0,
-    saying: 'meow',
-    friends: []
-};
-const catWoman= {
-    species: woman.species,
-    gender: woman.gender,
-    name: 'Sophie',
-    legs: 2,
-    hands: 2,
-    saying: cat.saying,
-    friends: []
-};
-man.friends = [woman, dog];
-woman.friends = [man, cat];
-dog.friends = [man, woman];
-cat.friends = [woman];
-catWoman.friends = [];
-
-function printCreature(creature){
-	return ['species', 'name', 'gender', 'legs', 'hands', 'saying']
-			  .map(key => creature[key])
-			  .concat(creature.friends.map(friend => friend.name))
-			  .join('; ');
+class Creature {
+	constructor(species,  gender, name, legs, hands, saying) {
+		this.species = species;
+		this.legs    = legs;
+		this.hands   = hands;
+		this.name    = name;
+		this.gender  = gender;
+		this.saying  = saying;
+		this.friends = [];
+	}
+    addFriends(...args){
+        this.friends = [...args];
+    }
+	printCreature(){
+		return ['species', 'gender', 'name', 'legs', 'hands', 'saying']
+				  .map(key => `<strong>${this[key]}</strong>`)
+				  .concat(this.friends.map(friend => `<em>${friend['name']}</em>`))
+				  .join('; ');
+	}
 }
+
+class SuperHero extends Creature {
+    constructor(prototipe1, prototipe2, name, legs, hands) {
+      super(null, null, name, legs, hands);
+	  this.species = prototipe1.species + '-' + prototipe2.species;
+	  this.gender  = prototipe1.gender;
+      this.saying  = prototipe2.saying;
+    }
+}
+
+const woman    = new Creature('human', 'female', 'Sarah', 2, 2, 'Love saves the world.');
+const man      = new Creature('human', 'male', 'John', 2, 2, 'Boys will be boys.');
+const cat      = new Creature('cat', 'female', 'Maya', 4, 0, 'Meow.');
+const dog      = new Creature('dog', 'male', 'Toby', 4, 0, 'Woof-woof!');
+const catWoman = new SuperHero(woman, cat, 'Sophie', 2, 2);
+const dogMan   = new SuperHero(man, dog, 'Barsik', 2, 2);
+
+
+woman.addFriends(man, cat);
+man.addFriends(woman, dog);
+dog.addFriends(woman, man);
+catWoman.addFriends(cat, dog);
+dogMan.addFriends(cat, dog, woman, man);
 
 // ======== OUTPUT ========
 /* Use print(message) for output.
@@ -74,12 +59,9 @@ function printCreature(creature){
    However, please, REFRAIN from improving visuals at least until your code is reviewed
    so code reviewers might focus on a single file that is index.js.
    */
+[woman, man, cat, dog, catWoman, dogMan].map(creature => print(creature.printCreature()));
 
-print(printCreature(man));
-print(printCreature(woman));
-print(printCreature(dog));
-print(printCreature(cat));
-print(printCreature(catWoman));
+
 
 /* Print examples:
    print('ABC');
